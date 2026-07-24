@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather-searching</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<body>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"> ☀️ Weather App</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Radar</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           About this App
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Health & Activites</a></li>
+            <li><a class="dropdown-item" href="#">Wind</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Heat index</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-disabled="true">Usage Guide</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input  id ="cityInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button id= "searchId" class="btn btn-outline-success" type="submit">Search</button>
+
+      </form>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <main> <div class="row row-cols-1 row-cols-md-3 mb-3 text-center"> 
+    <div class="col"> <div class="card mb-4 rounded-3 shadow-sm"> 
+      <div class="card-header py-3"> 
+        <h4 class="my-0 fw-normal">🌤️ Card 1 – Today</h4> </div> <div class="card-body"> 
+         
+<img id="weatherIcon" src="" alt="weather icon">
+          <h1 id= "cityName" class="card-title pricing-card-title"><small class="text-body-secondary fw-light"></small>
+          </div></h1> <ul class="list-unstyled mt-3 mb-4"> <li>🌡️ Live Temperature: <span id="temperature"></span></li> <li>💧 Humidity Level: <span id="humidity"></span></li> 
+            <li>🌬️ Wind Speed: <span id="wind"></span></li>  <li>Thunder Storm: <span id="thunder"></span></li> </ul> <button type="button" class="w-100 btn btn-lg btn-primary">View Weather</button> 
+          </div> </div> </div> <div class="col"> <div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <h4 class="my-0 fw-normal">⏰ Card 2 – Hourly</h4> </div>
+           <div class="card-body"> <h1 class="card-title pricing-card-title"><small class="text-body-secondary fw-light"></small></h1> <ul class="list-unstyled mt-3 mb-4"> <li>🕒 24-Hour Forecast</li>
+             <li>🌦️ Rain Probability</li> <li>🌬️ Wind Forecast</li> <li>🌅 Sunrise & Sunset</li> </ul> <button type="button" class="w-100 btn btn-lg btn-primary">Explore Hourly</button> </div> </div> </div>
+              <div class="col"> <div class="card mb-4 rounded-3 shadow-sm border-primary"> <div class="card-header py-3 "> <h4 class="my-0 fw-normal">📅 Card 3 – Weekly</h4> </div>
+
+<div class="card-body"> <p id="day1Date"></p>
+<img id="day1Icon" src="" alt="icon">
+<p id="day1Temp"></p>
+
+<p id="day2Date"></p>
+<img id="day2Icon" src="" alt="icon">
+<p id="day2Temp"></p>
+
+<p id="day3Date"></p>
+<img id="day3Icon" src="" alt="icon">
+<p id="day3Temp"></p>
+
+<p id="day4Date"></p>
+<img id="day4Icon" src="" alt="icon">
+<p id="day4Temp"></p>
+
+<p id="day5Date"></p>
+<img id="day5Icon" src="" alt="icon">
+<p id="day5Temp"></p><h1 class="card-title pricing-card-title"><small class="text-body-secondary fw-light"></small></h1> <ul class="list-unstyled mt-3 mb-4"> 
+<li>📆 5-Day Forecast</li> <li>🌡️ High & Low Temperatures</li> <li>🌧️ Weekly Rain Chances</li> <li>🌤️ Weather Trends</li> </ul> <button type="button" class="w-100 btn btn-lg btn-primary">View Weekly</button> </div> </div> </div> </div> <h2 class="display-6 text-center mb-4">Compare plans</h2> <div class="table-responsive"> 
+<table class="table text-center"> <thead> <tr> <th style="width: 34%;"></th> <th style="width: 22%;">AIR QUALITY</th> <th style="width: 22%;">HUMIDITY</th> <th style="width: 22%;">MINUTECAST</th> </tr> </thead> <tbody> <tr> 
+<th scope="row" class="text-start">Delhi</th> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg>
+</td> </tr> <tr> <th scope="row" class="text-start">Mumbai</th> <td></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use>
+</svg></td> </tr> </tbody> <tbody> <tr> <th scope="row" class="text-start">Banglore</th> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> 
+ <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> </tr> <tr> <th scope="row" class="text-start">Indore</th> <td></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included">
+<use xlink:href="#check"></use></svg></td> </tr> <tr> <th scope="row" class="text-start">Paris</th> <td></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> </tr> <tr> <th scope="row" class="text-start">New York</th> <td></td> <td></td> <td><svg class="bi" width="24" height="24" role="img" aria-label="Included"><use xlink:href="#check"></use></svg></td> </tr> </tbody> </table> </div> </main>
+</div>
+
+    
+
+    
+   
+      
+     
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+
+    
+</body>
+</html>

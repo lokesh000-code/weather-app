@@ -4,7 +4,6 @@
   Paste your OpenWeatherMap API key here.
   Keep the API key inside quotation marks.
 */
-
 const API_KEY = "43bd682ea910152ac6e5296e6140cb00";
 
 const CURRENT_WEATHER_API =
@@ -12,6 +11,7 @@ const CURRENT_WEATHER_API =
 
 const FORECAST_API =
   "https://api.openweathermap.org/data/2.5/forecast";
+
 /* HTML elements */
 
 const searchForm = document.getElementById("searchForm");
@@ -38,8 +38,6 @@ const wind =
 
 const thunder =
   document.getElementById("thunder");
-const locationBtn =
-  document.getElementById("locationBtn");
 
 /* Search event */
 
@@ -55,96 +53,6 @@ searchForm.addEventListener("submit", async function (event) {
 
   await loadCompleteWeather(city);
 });
-
-locationBtn.addEventListener(
-  "click",
-  getCurrentLocationWeather
-);
-function getCurrentLocationWeather() {
-  if (!navigator.geolocation) {
-    showError(
-      "Your browser does not support location. Showing Delhi weather."
-    );
-
-    loadCompleteWeather("Delhi");
-    return;
-  }
-
-  setLoading(true);
-
-  navigator.geolocation.getCurrentPosition(
-    locationSuccess,
-    locationError
-  );
-}
-async function locationSuccess(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-
-  try {
-    const currentData =
-      await getCurrentWeatherByCoordinates(
-        latitude,
-        longitude
-      );
-
-    const forecastData =
-      await getForecastByCoordinates(
-        latitude,
-        longitude
-      );
-
-   const address = await getLocationName(
-    latitude,
-    longitude
-);
-
-displayCurrentWeather(currentData);
-
-cityName.innerHTML = `
-📍 ${address.suburb || address.neighbourhood || "Current Location"}<br>
-${address.city || address.county},
-${address.state}
-`;
-
-displayFiveDayForecast(forecastData);
-updateWeatherTable(currentData);
-
-  } catch (error) {
-    console.error(error);
-
-    showError(
-      "Unable to load your location weather. Showing Delhi weather."
-    );
-
-    await loadCompleteWeather("Delhi");
-
-  } finally {
-    setLoading(false);
-  }
-}function locationError(error) {
-  setLoading(false);
-
-  if (error.code === error.PERMISSION_DENIED) {
-    showError(
-      "Location permission denied. Showing Delhi weather."
-    );
-  } else if (error.code === error.POSITION_UNAVAILABLE) {
-    showError(
-      "Your location is unavailable. Showing Delhi weather."
-    );
-  } else if (error.code === error.TIMEOUT) {
-    showError(
-      "Location request timed out. Showing Delhi weather."
-    );
-  } else {
-    showError(
-      "Unable to access location. Showing Delhi weather."
-    );
-  }
-
-  loadCompleteWeather("Delhi");
-}
 
 /* Load both current and forecast weather */
 
@@ -187,24 +95,6 @@ async function getCurrentWeather(city) {
 
   return response.json();
 }
-async function getCurrentWeatherByCoordinates(
-  latitude,
-  longitude
-) {
-  const requestURL =
-    `${CURRENT_WEATHER_API}?lat=${latitude}` +
-    `&lon=${longitude}` +
-    `&appid=${API_KEY}` +
-    `&units=metric`;
-
-  const response = await fetch(requestURL);
-
-  if (!response.ok) {
-    throw createApiError(response.status);
-  }
-
-  return response.json();
-}
 
 /* Forecast request */
 
@@ -220,34 +110,6 @@ async function getForecastWeather(city) {
   }
 
   return response.json();
-}
-async function getForecastByCoordinates(
-  latitude,
-  longitude
-) {
-  const requestURL =
-    `${FORECAST_API}?lat=${latitude}` +
-    `&lon=${longitude}` +
-    `&appid=${API_KEY}` +
-    `&units=metric`;
-
-  const response = await fetch(requestURL);
-
-  if (!response.ok) {
-    throw createApiError(response.status);
-  }
-
-  return response.json();
-}
-async function getLocationName(latitude, longitude) {
-
-    const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-    );
-
-    const data = await response.json();
-
-    return data.address;
 }
 
 /* Display current weather */
@@ -554,4 +416,10 @@ function escapeHTML(value) {
 
 /* Load Delhi when the page opens */
 
-getCurrentLocationWeather();
+loadCompleteWeather("Delhi");
+
+
+
+
+
+

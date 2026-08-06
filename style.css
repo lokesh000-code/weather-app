@@ -446,4 +446,26 @@ body {
   .card-body {
     padding: 20px !important;
   }
+}#cityName {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.location-area {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.location-city {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.location-accuracy {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
 }

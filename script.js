@@ -38,6 +38,8 @@ const wind =
 
 const thunder =
   document.getElementById("thunder");
+  const locationBtn =
+  document.getElementById("locationBtn");
 
 /* Search event */
 
@@ -53,6 +55,115 @@ searchForm.addEventListener("submit", async function (event) {
 
   await loadCompleteWeather(city);
 });
+if (locationBtn) {
+  locationBtn.addEventListener(
+    "click",
+    getCurrentLocationWeather
+  );
+}function getCurrentLocationWeather() {
+  if (!navigator.geolocation) {
+    showError(
+      "Location is not supported. Showing Delhi weather."
+    );
+
+    loadCompleteWeather("Delhi");
+    return;
+  }
+
+  setLoading(true);
+
+  navigator.geolocation.getCurrentPosition(
+    locationSuccess,
+    locationError,
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+
+async function locationSuccess(position) {
+  const latitude = position.coords.latitude;
+  const longitude = position.coords.longitude;
+  const accuracy = position.coords.accuracy;
+
+  try {
+    const currentData =
+      await getCurrentWeatherByCoordinates(
+        latitude,
+        longitude
+      );
+
+    const forecastData =
+      await getForecastByCoordinates(
+        latitude,
+        longitude
+      );
+
+    const locationData =
+      await getExactLocationName(
+        latitude,
+        longitude
+      );
+
+    displayCurrentWeather(currentData);
+    displayFiveDayForecast(forecastData);
+    updateWeatherTable(currentData);
+
+    displayExactLocation(locationData, accuracy);
+
+  } catch (error) {
+    console.error(error);
+
+    showError(
+      "Unable to find exact location. Showing nearby weather."
+    );
+  } finally {
+    setLoading(false);
+  }
+}
+function displayExactLocation(location, accuracy) {
+  cityName.innerHTML = `
+    <span class="location-area">
+      📍 ${escapeHTML(location.area)}
+    </span>
+
+    <span class="location-city">
+      ${escapeHTML(location.city)}
+      ${location.city && location.state ? ", " : ""}
+      ${escapeHTML(location.state)}
+    </span>
+
+    <small class="location-accuracy">
+      Location accuracy: approximately ${Math.round(accuracy)} metres
+    </small>
+  `;
+}
+
+function locationError(error) {
+  setLoading(false);
+
+  if (error.code === error.PERMISSION_DENIED) {
+    showError(
+      "Location permission denied. Showing Delhi weather."
+    );
+  } else if (error.code === error.POSITION_UNAVAILABLE) {
+    showError(
+      "Location is unavailable. Showing Delhi weather."
+    );
+  } else if (error.code === error.TIMEOUT) {
+    showError(
+      "Location request timed out. Showing Delhi weather."
+    );
+  } else {
+    showError(
+      "Unable to access location. Showing Delhi weather."
+    );
+  }
+
+  loadCompleteWeather("Delhi");
+}
 
 /* Load both current and forecast weather */
 
@@ -111,6 +222,91 @@ async function getForecastWeather(city) {
 
   return response.json();
 }
+async function getCurrentWeatherByCoordinates(
+  latitude,
+  longitude
+) {
+  const requestURL =
+    `${CURRENT_WEATHER_API}?lat=${latitude}` +
+    `&lon=${longitude}` +
+    `&appid=${API_KEY}` +
+    `&units=metric`;
+
+  const response = await fetch(requestURL);
+
+  if (!response.ok) {
+    throw createApiError(response.status);
+  }
+
+  return response.json();
+}
+
+async function getForecastByCoordinates(
+  latitude,
+  longitude
+) {
+  const requestURL =
+    `${FORECAST_API}?lat=${latitude}` +
+    `&lon=${longitude}` +
+    `&appid=${API_KEY}` +
+    `&units=metric`;
+
+  const response = await fetch(requestURL);
+
+  if (!response.ok) {
+    throw createApiError(response.status);
+  }
+
+  return response.json();
+}
+async function getExactLocationName(latitude, longitude) {
+  const url =
+    `https://nominatim.openstreetmap.org/reverse` +
+    `?format=jsonv2` +
+    `&lat=${latitude}` +
+    `&lon=${longitude}` +
+    `&zoom=18` +
+    `&addressdetails=1`;
+
+  const response = await fetch(url, {
+    headers: {
+      "Accept-Language": "en"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to find exact location name.");
+  }
+
+  const data = await response.json();
+  const address = data.address || {};
+
+  const area =
+    address.neighbourhood ||
+    address.suburb ||
+    address.quarter ||
+    address.residential ||
+    address.city_district ||
+    address.road ||
+    "Current Location";
+
+  const city =
+    address.city ||
+    address.town ||
+    address.municipality ||
+    address.county ||
+    "";
+
+  const state = address.state || "";
+
+  return {
+    area,
+    city,
+    state,
+    fullAddress: data.display_name || ""
+  };
+}
+
 
 /* Display current weather */
 
@@ -415,8 +611,7 @@ function escapeHTML(value) {
 }
 
 /* Load Delhi when the page opens */
-
-loadCompleteWeather("Delhi");
+getCurrentLocationWeather();
 
 
 

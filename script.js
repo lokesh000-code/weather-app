@@ -9,7 +9,7 @@ const API_KEY = "43bd682ea910152ac6e5296e6140cb00";
 const CURRENT_WEATHER_API =
   "https://api.openweathermap.org/data/2.5/weather";
 
-const FORECAST_API =
+const FORECAST_API = 
   "https://api.openweathermap.org/data/2.5/forecast";
 
 /* HTML elements */
@@ -435,7 +435,7 @@ function getForecastClosestToNoon(dailyForecasts) {
     return currentDifference < closestDifference
       ? current
       : closest;
-  });
+  });.+++++..+
 }
 
 /* Update your existing last table */
